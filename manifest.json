@@ -1,1 +1,32 @@
-
+{
+  "manifest_version": 3,
+  "name": "Malware Download Scanner",
+  "version": "1.0",
+  "description": "다운로드 파일을 서버에 전송하여 악성 여부를 판단하고, 안전할 경우에만 다운로드를 진행합니다.",
+  "permissions": [
+    "downloads",
+    "notifications",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://localhost:5000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icon.png",
+      "32": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    },
+    "default_title": "다운로드 검사기"
+  },
+  "icons": {
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}

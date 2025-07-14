@@ -1,3 +1,4 @@
+iconst SERVER_URL = "http://165.246.34.137:8080";
 const pendingUrls = new Set();
 
 chrome.downloads.onCreated.addListener(async (downloadItem) => {
@@ -5,7 +6,9 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
 
     const parsedUrl = new URL(url);
     const filenameFromUrl = parsedUrl.pathname.split('/').pop() || "downloaded.bin";
-    const filename = downloadItem.filename || filenameFromUrl;
+    const filename = (downloadItem.filename && !downloadItem.filename.includes('?'))
+        ? downloadItem.filename
+        : filenameFromUrl;
 
     if (pendingUrls.has(url) || url.includes("safe_download")) return;
     pendingUrls.add(url);
@@ -17,7 +20,8 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
     });
 
     try {
-        const response = await fetch("http://localhost:5000/report_download", {
+        console.log("[DEBUG] 서버 요청 시작:", url);
+        const response = await fetch(`${SERVER_URL}/report_download`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ url, filename })
@@ -33,7 +37,7 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
                 message: `${filename} 은(는) 악성으로 판별되었습니다.`
             });
         } else {
-            const downloadSafeUrl = `http://localhost:5000/safe_download/${encodeURIComponent(result.filename)}`;
+            const downloadSafeUrl = `${SERVER_URL}/safe_download/${encodeURIComponent(result.filename)}`;
             chrome.downloads.download({ url: downloadSafeUrl, filename: result.filename });
         }
 
@@ -49,3 +53,4 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
         pendingUrls.delete(url);
     }
 });
+

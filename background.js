@@ -1,4 +1,4 @@
-iconst SERVER_URL = "http://165.246.34.137:8080";
+const SERVER_URL = "http://165.246.34.137:8080";
 const pendingUrls = new Set();
 
 chrome.downloads.onCreated.addListener(async (downloadItem) => {

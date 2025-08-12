@@ -240,3 +240,34 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
         console.log(`[DEBUG] urlsUnderAnalysis 목록 정리 완료: ${originalUrl}`);
     }
 });
+
+// 콘텐츠 스크립트로부터 메시지를 받는 리스너
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    // 비동기 함수를 즉시 호출하고 비동기 응답을 반환
+    if (request.action === "scan_attachments") {
+        (async () => {
+            const scanResults = {};
+            for (const fileUrl of request.urls) {
+                try {
+                    const response = await fetch(`${SERVER_URL}/analyze`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ url: fileUrl })
+                    });
+    
+                    const result = await response.json();
+                    scanResults[fileUrl] = result;
+                    console.log(`[DEBUG] 서버 응답 받음: ${fileUrl}`, result);
+                } catch (error) {
+                    console.error(`[!] 파일 스캔 오류: ${fileUrl}`, error);
+                    scanResults[fileUrl] = { is_malicious: null, error: true, message: "분석 실패" };
+                }
+            }
+            
+            // 모든 스캔이 완료되면 응답을 보냅니다.
+            sendResponse({ results: scanResults });
+        })(); // 즉시 실행 함수
+        
+        return true; // 비동기 응답을 위해 이 부분을 반드시 추가해야 합니다.
+    }
+});

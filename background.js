@@ -7,7 +7,7 @@ const urlsToSkipNextOnCreated = new Set();
 
 function sanitizeFilename(filename) {
     if (!filename) {
-	// default file name
+		// default file name
         return "download.bin";
     }
 
@@ -58,7 +58,7 @@ async function getBestOriginalFilename(downloadItem) {
             }
         }
     } catch (e) {
-	// continue to URL parsing if the HEAD request fails
+		// continue to URL parsing if the HEAD request fails
         console.warn("Error during HEAD request for Content-Disposition:", e);
     }
 
@@ -136,7 +136,7 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
     let filenameToSendToServer = bestOriginalFilename;
 
     try {
-	// send URL, file name to server
+		// send URL, file name to server
         console.log("[DEBUG] 서버 분석 요청 시작:", originalUrl);
         const response = await fetch(`${SERVER_URL}/analyze`, {
             method: "POST",
@@ -160,7 +160,7 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
                 message: `${bestOriginalFilename} 은(는) 악성으로 판별되었습니다.`
             });
         } else {
-	    // start the re-download directly from the source URL if the file is determined to be secure
+	    	// start the re-download directly from the source URL if the file is determined to be secure
             console.log(`[+] 안전한 파일. 원본 URL에서 재다운로드 시작: ${originalUrl}`);
             urlsToSkipNextOnCreated.add(originalUrl);
 

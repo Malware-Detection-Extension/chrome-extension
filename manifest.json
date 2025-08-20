@@ -9,11 +9,7 @@
     "storage"
   ],
   "host_permissions": [
-<<<<<<< HEAD
     "<all_urls>"
-=======
-    "http://165.246.34.137:8080/*"
->>>>>>> eff95404d1bdf9fb3e41e75dda2eeefc993ccad1
   ],
   "background": {
     "service_worker": "background.js"

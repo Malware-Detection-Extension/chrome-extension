@@ -155,7 +155,7 @@ chrome.downloads.onCreated.addListener(async (downloadItem) => {
             console.log(`[!] 악성 파일 탐지됨: ${bestOriginalFilename}`);
             chrome.notifications.create({
                 type: "basic",
-                iconUrl: "icon.png", // 확장 프로그램 디렉토리에 icon.png 파일이 있어야 합니다.
+                iconUrl: "icon.png",
                 title: "🚫 다운로드 차단됨",
                 message: `${bestOriginalFilename} 은(는) 악성으로 판별되었습니다.`
             });
